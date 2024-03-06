@@ -1,16 +1,11 @@
 "use strict";
 
-structure_data();
+import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
-async function structure_data () {
-    let dataset = await d3.csv( "vgsales.csv" )
-    let platforms = [];
+create_svg();
 
-    dataset.forEach(object => {
-        if(!platforms.includes(object.Platform)) {
-            platforms.push(object.Platform);
-        }
-    })
+async function structure_data (purpose, genre) {
+    let dataset = await d3.csv( "./csv/vgsales.csv" )
 
     let unique_names = [];
     let updated_dataset = [];
@@ -42,68 +37,79 @@ async function structure_data () {
     })
 
     updated_dataset.sort( (a, b) => b.Global_Sales - a.Global_Sales);
-    updated_dataset = updated_dataset.slice(0, 25);
-    console.log(updated_dataset);
 
-    create_svg(updated_dataset);
+    if(purpose == "start") {
+        updated_dataset = updated_dataset.slice(0, 10);
+        console.log(updated_dataset);
+        return updated_dataset;
+    }
+
+    if(purpose == "filter") {
+        
+        updated_dataset = updated_dataset.filter( object => {
+            return object.Genre == genre;
+        }) 
+
+        updated_dataset = updated_dataset.slice(0, 10);
+
+        console.log(updated_dataset);
+
+        return updated_dataset;
+    }
 
 }
 
-function create_svg(dataset) {
-    const hSvg = 600, wSvg = 1200,
-      wViz = .9 * wSvg,
-      hViz = .3 * hSvg,
-      wPad = (wSvg - wViz) / 2,
-      hPad = (hSvg - hViz) / 2;
+async function create_svg() {
+    
+    let dataset = await structure_data("start");
+
+    create_genre_buttons(dataset)
+
+    const hSvg = 600, wSvg = 600,
+        wViz = .9 * wSvg,
+        hViz = .3 * hSvg,
+        wPad = (wSvg - wViz) / 2,
+        hPad = (hSvg - hViz) / 2;
 
     let names = dataset.map(d => d.Name);
     let xScale = d3.scaleBand()
-                .domain(names)
-                .range([0, wViz])
-                .paddingInner(.1)
-                .paddingOuter(.1);
+        .domain(names)
+        .range([0, wViz])
+        .paddingInner(.1)
+        .paddingOuter(.1);
     let wBar = xScale.bandwidth;
 
     let global_max = dataset[0].Global_Sales;
     dataset.forEach( d => { if (d.Global_Sales > global_max) global_max = d.Global_Sales });
     let yScale = d3.scaleLinear()
-                .domain([0, global_max * 1.2]) // nTop = 20% mer än nMax
-                .range([hViz, 0]);        // inverterad range!
+        .domain([0, global_max * 1.2])
+        .range([hViz, 0]);      
 
     let svg = d3.select("body").append("svg")
-                .attr("width", wSvg).attr("height", hSvg)
+        .attr("width", wSvg).attr("height", hSvg)
 
-    // Rita graf-areans bakgrund
-    // (rita före grafen, annars hamnar bakgrunden ovanför grafen)
-    svg.append("rect")
-        .attr("width", wViz)
-        .attr("height", hViz)
-        .attr("x", wPad)
-        .attr("y", hPad)
-        .attr("fill", "white");
+    let gviz_bars = svg.append("g")
+        .attr("transform", `translate(${wPad}, ${hPad})`);
 
-    // Skapa ett <g> för graf-arean (viz-area)
-    let gviz = svg.append("g")
-                .attr("transform", `translate(${wPad}, ${hPad})`);
-
-    // Rita grafen i gviz
-    gviz.selectAll("rect")
+    gviz_bars.selectAll("rect")
         .data(dataset)
         .enter()
-        .append("rect")     // rects appendas till gviz
+        .append("rect")   
         .attr("width", wBar)
         .attr("x", setX)
         .attr("y", setY)
         .attr("height", setH)
     
-    svg.append("g")
+    let gviz_text = svg.append("g");
+    
+    gviz_text
         .attr("transform", `translate(${wPad}, ${hPad})`)
         .selectAll("rect")
         .data(dataset)
         .enter()
         .append("text")
         .text(set_text)
-        .attr("x", setX_text)
+        .attr("x", setX)
         .attr("y", setY_text)
 
 
@@ -111,7 +117,49 @@ function create_svg(dataset) {
     function setY (d, i) { return yScale(d.Global_Sales); }
     function setH (d, i) { return hViz - yScale(d.Global_Sales); }
 
-    function setX_text (d) {return xScale(d.Name)}
     function setY_text (d) {return yScale(d.Global_Sales + 50)}
     function set_text (d) {return d.Name}
+
+    function create_genre_buttons (dataset) {
+        let button_container = d3.select("body")
+            .append("div")
+    
+        button_container.classed("button_container")
+        let genres = [];
+    
+        dataset.forEach( e => {
+            if(!genres.includes(e.Genre)) {
+                genres.push(e.Genre);
+            }
+        })
+    
+        genres.forEach( e => {
+            button_container.append("button")   
+                .text(e)
+                .on('click', async (event) => {
+                    button_container.select("button.active").classed("active", false);
+                    event.target.classList.add("active");
+    
+                    let new_data = await structure_data("filter", e);
+                    
+                    update_svg(new_data);
+                });
+        })
+    }
+
+    function update_svg (new_data) {
+        gviz_bars.selectAll("rect")
+            .data(new_data)
+            .transition()
+            .attr("height", setH)
+            .attr("y", setY);
+    
+        gviz_text
+            .selectAll("text")
+            .data(new_data)
+            .transition()
+            .text(set_text)
+            .attr("y", setY_text)
+        
+    }
 }
