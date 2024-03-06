@@ -10,7 +10,7 @@ const data =
     {name: "f", ammount: 6},
 ];
 
-const hSvg = 600, wSvg = 600,
+const hSvg = 800, wSvg = 600,
     hViz = hSvg * .9, wViz = wSvg * .9,
     wPad = (wSvg - wViz) / 2, hPad = (hSvg - hViz) / 2;
 
@@ -35,7 +35,7 @@ let svg = d3.select("body").append("svg")
     .attr("width", wSvg)
 
 let g = svg.append("g")
-    .attr("transform", `translate(${outerRadius + wPad}, ${outerRadius + hPad})`);
+    .attr("transform", `translate(${outerRadius + wPad}, ${hViz/2})`);
 g
     .selectAll("path")
     .data(data)
