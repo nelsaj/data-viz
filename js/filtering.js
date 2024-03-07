@@ -1,4 +1,5 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+import * as variable from "./variables.js";
 
 export async function structure_data () {
     let dataset = await d3.csv( "./csv/vgsales.csv" )
@@ -42,7 +43,7 @@ export function filter_by_genre(dataset, genre) {
         return object.Genre == genre;
     }) 
 
-    dataset = dataset.slice(0, 10);
+    dataset = dataset.slice(0, variable.number_of_games);
 
     console.log(dataset);
 

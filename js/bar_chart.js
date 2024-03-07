@@ -1,5 +1,6 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import * as variable from "./variables.js";
+import { get_color } from "./colors.js";
 
 function create_xScale(dataset) {
     let xScale = d3.scaleBand()
@@ -20,9 +21,7 @@ function create_yScale (dataset) {
 }
 
 export async function create_bar_chart (dataset) {
-
-    //FILTER DATASET
-    dataset = dataset.slice(0, 10);
+    dataset = dataset.slice(0, variable.number_of_games);
     console.log(dataset);
     
     let xScale = create_xScale(dataset);
@@ -39,6 +38,7 @@ export async function create_bar_chart (dataset) {
         .enter()
         .append("rect")  
         .classed("bar", true) 
+        .attr("fill", d => get_color(d.Genre))
         .attr("width", wBar)
         .attr("x", setX)
         .attr("y", setY)
@@ -61,7 +61,7 @@ export async function create_bar_chart (dataset) {
     function setY (d, i) { return yScale(d.Global_Sales); }
     function setH (d, i) { return variable.hViz - yScale(d.Global_Sales); }
     function setX_text (d, i) { return xScale(d.Name) + (xScale.bandwidth()/2)} // - lineheight /2
-    function setY_text (d) {return yScale(d.Global_Sales + 5)}
+    function setY_text (d) {return yScale(d.Global_Sales)}
     function set_text_content (d) {return d.Name}
 }
 
@@ -73,6 +73,7 @@ export function update_bar_chart (new_data) {
     d3.select(".g_bars").selectAll("rect")
         .data(new_data)
         .transition()
+        .attr("fill", d => get_color(d.Genre))
         .attr("height", setH)
         .attr("y", setY);
 
@@ -86,7 +87,7 @@ export function update_bar_chart (new_data) {
     function setY (d, i) { return yScale(d.Global_Sales); }
     function setH (d, i) { return variable.hViz - yScale(d.Global_Sales); }
     function setX_text (d, i) { return xScale(d.Name) + (xScale.bandwidth()/2)} // - lineheight /2
-    function setY_text (d) {return yScale(d.Global_Sales + 5)}
+    function setY_text (d) {return yScale(d.Global_Sales)}
     function set_text_content (d) {return d.Name}
     
 }
