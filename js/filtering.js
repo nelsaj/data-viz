@@ -109,17 +109,17 @@ async function create_svg() {
         .data(dataset)
         .enter()
         .append("text")
-        .text(set_text)
-        .attr("x", setX)
-        .attr("y", setY_text)
-
+        .classed("game_title", true)
+        .attr("transform", d => `translate(${setX_text(d)}, ${setY_text(d)})rotate(-90)`)
+        .text(set_text_content)
 
     function setX (d, i) { return xScale(d.Name); }
     function setY (d, i) { return yScale(d.Global_Sales); }
     function setH (d, i) { return hViz - yScale(d.Global_Sales); }
 
-    function setY_text (d) {return yScale(d.Global_Sales + 50)}
-    function set_text (d) {return d.Name}
+    function setX_text (d, i) { return xScale(d.Name) + (xScale.bandwidth()/2)}
+    function setY_text (d) {return yScale(d.Global_Sales + 30)}
+    function set_text_content (d) {return d.Name}
 
     function create_genre_buttons (dataset) {
         let button_container = d3.select("body")
