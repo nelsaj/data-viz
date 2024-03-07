@@ -1,9 +1,12 @@
+import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+
 "use strict";
 
-(async function () {
-    let dataset = await d3.csv( "vgsales.csv" )
+let updated_dataset = [];
+async function new_dataset () {
+    let dataset = await d3.csv( "./csv/vgsales.csv" )
     let platforms = [];
-
+    
     dataset.forEach(object => {
         if(!platforms.includes(object.Platform)) {
             platforms.push(object.Platform);
@@ -11,7 +14,6 @@
     })
 
     let unique_names = [];
-    let updated_dataset = [];
 
     dataset.forEach( object => {
         if(!unique_names.includes(object.Name)) {
@@ -41,6 +43,12 @@
 
     updated_dataset.sort( (a, b) => b.Global_Sales - a.Global_Sales);
 
-    console.log(updated_dataset)
-    console.log(dataset);
-}) ()
+    // console.log(updated_dataset)
+    // console.log(dataset);
+};
+new_dataset();
+
+export async function give (i) {
+    await new_dataset();
+    return updated_dataset[i];
+}

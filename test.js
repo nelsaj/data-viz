@@ -35,7 +35,7 @@ let svg = d3.select("body").append("svg")
     .attr("width", wSvg)
 
 let g = svg.append("g")
-    .attr("transform", `translate(${outerRadius + wPad}, ${hViz/2})`);
+    .attr("transform", `translate(${outerRadius + wPad}, ${hSvg/2})`);
 g
     .selectAll("path")
     .data(data)
