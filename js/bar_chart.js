@@ -61,14 +61,18 @@ export async function create_bar_chart (dataset) {
         .enter()
         .append("text")
         .classed("game_title", true)
-        .attr("transform", d => `translate(${setX_text(d)}, ${setY_text(d)})rotate(-90)`)
+        // .attr("transform", d => `translate(${setX_text(d)}, ${setY_text(d)})rotate(-90)`)
         .text(set_text_content)
 
-    // const textElement = document.querySelector(".game_title");
-    // let style = window.getComputedStyle(textElement);
-    // let lineHeight = style.lineHeight;
-    // d3.selectAll(".game_title").attr("transform", `translate(0, ${lineHeight/2})`)
-    // d3.selectAll(".game_title")
+
+    const textElement = document.querySelector(".game_title");
+    let style = window.getComputedStyle(textElement);
+    let fontSize = style.fontSize;
+    fontSize.substring(0, 2)
+    fontSize = parseInt(fontSize);
+
+    d3.selectAll(".game_title") 
+        .attr("transform", d => `translate(${setX_text(d) + fontSize/3}, ${setY_text(d)})rotate(-90)`)
     
 
 
