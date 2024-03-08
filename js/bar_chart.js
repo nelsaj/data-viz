@@ -121,3 +121,8 @@ export function update_bar_chart (old_data, new_data) {
     
 }
 
+export function yScale_for_lines (dataset, d) {
+    let yScale = create_yScale(dataset);
+    let value = yScale(d.Global_Sales)
+    return value;
+}
