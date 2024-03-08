@@ -1,4 +1,5 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+import { get_color } from "./colors.js";
 import * as variable from "./variables.js";
 
 
@@ -44,7 +45,8 @@ export async function create_line_chart (dataset) {
         .enter()
         .append("circle")
         .classed("dot", true)
-        .attr("r", 4)
+        .attr("fill", d => get_color(d.Genre))
+        .attr("r", 5)
         .attr("cy", (d, i) => yScale(d.Year)) 
         .attr("cx", (d, i) => xScale(d.Name))
 
@@ -68,6 +70,7 @@ export function update_line_chart (old_data, new_data) {
     d3.select(".g_dots").selectAll("circle")
         .data(new_data)
         .transition()
+        .attr("fill", d => get_color(d.Genre))
         .attr("cy", (d) => yScale(d.Year)) 
         // .attr("fill", d => get_color(d.Genre))
 }

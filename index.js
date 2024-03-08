@@ -6,6 +6,7 @@ import { create_bar_chart } from "./js/bar_chart.js";
 import { create_genre_buttons } from "./js/genre_buttons.js";
 import { create_line_chart } from "./js/linechart.js";
 import { create_wrapper } from "./js/wrapper_g.js";
+import { create_sales_circles } from "./js/sales_circles.js";
 
 ( async function () {
     let dataset = await structure_data();
@@ -17,4 +18,6 @@ import { create_wrapper } from "./js/wrapper_g.js";
     await create_genre_buttons(dataset);
 
     await create_line_chart(dataset);
+
+    await create_sales_circles(dataset);
 }) ()

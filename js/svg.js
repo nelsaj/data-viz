@@ -9,3 +9,5 @@ export async function create_svg() {
         .attr("width", variable.wSvg).attr("height", variable.hSvg);
     
 }
+
+

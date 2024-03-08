@@ -72,7 +72,7 @@ export async function create_bar_chart (dataset) {
     fontSize = parseInt(fontSize);
 
     d3.selectAll(".game_title") 
-        .attr("transform", d => `translate(${setX_text(d) + fontSize/3}, ${setY_text(d)})rotate(-90)`)
+        .attr("transform", d => `translate(${setX_text(d) + fontSize/3}, ${setY_text(d) - 10})rotate(-90)`)
     
 
 
@@ -100,11 +100,17 @@ export function update_bar_chart (old_data, new_data) {
     // sharedG
     //     .attr("transform", `translate(${variable.wPad}, ${variable.hSvg - sharedG.select(".bar").attr("height")})`);
 
+    const textElement = document.querySelector(".game_title");
+    let style = window.getComputedStyle(textElement);
+    let fontSize = style.fontSize;
+    fontSize.substring(0, 2)
+    fontSize = parseInt(fontSize);
+
     d3.select(".g_text").selectAll("text")
         .data(new_data)
         .transition()
         .text(set_text_content)
-        .attr("transform", d => `translate(${setX_text(d)}, ${setY_text(d)})rotate(-90)`)
+        .attr("transform", d => `translate(${setX_text(d) + fontSize/3}, ${setY_text(d) - 10})rotate(-90)`)
     
     function setX (d, i) { return xScale(d.Name); }
     function setY (d, i) { return yScale(d.Global_Sales); }
@@ -114,3 +120,4 @@ export function update_bar_chart (old_data, new_data) {
     function set_text_content (d) {return d.Name}
     
 }
+
