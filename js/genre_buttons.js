@@ -2,6 +2,7 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import { update_bar_chart } from "./bar_chart.js";
 import { filter_by_genre } from "./filtering.js";
 import { get_color } from "./colors.js";
+import { update_line_chart } from "./linechart.js";
 
 export function create_genre_buttons (dataset) {
     let button_container = d3.select("body")
@@ -26,7 +27,8 @@ export function create_genre_buttons (dataset) {
         
                 let filtered_data = filter_by_genre(dataset, genre);
 
-                update_bar_chart(filtered_data);
+                update_bar_chart(dataset, filtered_data);
+                update_line_chart(dataset, filtered_data);
             });
     })
 }

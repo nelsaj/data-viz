@@ -1,3 +1,9 @@
-.game_title {}
+body {
+    margin: 0;
+}
+
+.game_title {
+    line-height: 1.2px;
+}
 
 .bar {}

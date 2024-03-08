@@ -15,7 +15,7 @@ function create_yScale (dataset) {
     let global_max = 0;
     dataset.forEach( d => { if (d.Global_Sales > global_max) global_max = d.Global_Sales });
     let yScale = d3.scaleLinear()
-        .domain([0, global_max * 1.2])
+        .domain([0, global_max * 1.5])
         .range([variable.hViz, 0]);  
     return yScale;
 }
@@ -29,9 +29,13 @@ export async function create_bar_chart (dataset) {
 
     let wBar = xScale.bandwidth;
 
-    let gviz_bars = d3.select("svg").append("g")
+    let sharedG = d3.select(".wrapper").append("g")
+        .classed("bar_G", true)
+        
+
+    let gviz_bars = sharedG.append("g")
         .classed("g_bars", true)
-        .attr("transform", `translate(${variable.wPad}, ${variable.hPad})`);
+        // .attr("transform", `translate(${variable.wPad}, ${variable.hPad})`);
 
     gviz_bars.selectAll("rect")
         .data(dataset)
@@ -44,11 +48,14 @@ export async function create_bar_chart (dataset) {
         .attr("y", setY)
         .attr("height", setH)
 
-    let gviz_text = d3.select("svg").append("g")
+    sharedG
+        .attr("transform", `translate(0, ${variable.hViz - sharedG.select(".bar").attr("height")})`);
+
+    let gviz_text = sharedG.append("g")
         .classed("g_text", true);
     
     gviz_text
-        .attr("transform", `translate(${variable.wPad}, ${variable.hPad})`)
+        // .attr("transform", `translate(${variable.wPad}, ${variable.hPad})`)
         .selectAll("rect")
         .data(dataset)
         .enter()
@@ -56,6 +63,14 @@ export async function create_bar_chart (dataset) {
         .classed("game_title", true)
         .attr("transform", d => `translate(${setX_text(d)}, ${setY_text(d)})rotate(-90)`)
         .text(set_text_content)
+
+    // const textElement = document.querySelector(".game_title");
+    // let style = window.getComputedStyle(textElement);
+    // let lineHeight = style.lineHeight;
+    // d3.selectAll(".game_title").attr("transform", `translate(0, ${lineHeight/2})`)
+    // d3.selectAll(".game_title")
+    
+
 
     function setX (d, i) { return xScale(d.Name); }
     function setY (d, i) { return yScale(d.Global_Sales); }
@@ -65,9 +80,9 @@ export async function create_bar_chart (dataset) {
     function set_text_content (d) {return d.Name}
 }
 
-export function update_bar_chart (new_data) {
+export function update_bar_chart (old_data, new_data) {
     let xScale = create_xScale(new_data);
-    let yScale = create_yScale(new_data);
+    let yScale = create_yScale(old_data);
 
     console.log(new_data);
     d3.select(".g_bars").selectAll("rect")
@@ -76,6 +91,10 @@ export function update_bar_chart (new_data) {
         .attr("fill", d => get_color(d.Genre))
         .attr("height", setH)
         .attr("y", setY);
+
+    // const sharedG = d3.select(".bar_G");
+    // sharedG
+    //     .attr("transform", `translate(${variable.wPad}, ${variable.hSvg - sharedG.select(".bar").attr("height")})`);
 
     d3.select(".g_text").selectAll("text")
         .data(new_data)
