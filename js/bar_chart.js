@@ -1,13 +1,15 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import * as variable from "./variables.js";
 import { get_color } from "./colors.js";
+import { update_line_chart } from "./linechart.js";
+let highest_bar;
 
 function create_xScale(dataset) {
     let xScale = d3.scaleBand()
             .domain(dataset.map(d => d.Name))
             .range([0, variable.wViz])
             .paddingInner(.1)
-            .paddingOuter(.1);
+            .paddingOuter(.05);
     return xScale;
 }
 
@@ -48,6 +50,8 @@ export async function create_bar_chart (dataset) {
         .attr("y", setY)
         .attr("height", setH)
 
+    highest_bar = d3.select(".bar_G").select(".bar").attr("height");
+
     sharedG
         .attr("transform", `translate(0, ${variable.hViz - sharedG.select(".bar").attr("height")})`);
 
@@ -72,7 +76,7 @@ export async function create_bar_chart (dataset) {
     fontSize = parseInt(fontSize);
 
     d3.selectAll(".game_title") 
-        .attr("transform", d => `translate(${setX_text(d) + fontSize/3}, ${setY_text(d) - 10})rotate(-90)`)
+        .attr("transform", d => `translate(${setX_text(d) + fontSize/4}, ${setY_text(d) - 10})rotate(-90)`)
     
 
 
@@ -91,7 +95,7 @@ export function update_bar_chart (old_data, new_data) {
     console.log(new_data);
     d3.select(".g_bars").selectAll("rect")
         .data(new_data)
-        .transition()
+        .transition(variable.timer)
         .attr("fill", d => get_color(d.Genre))
         .attr("height", setH)
         .attr("y", setY);
@@ -108,10 +112,15 @@ export function update_bar_chart (old_data, new_data) {
 
     d3.select(".g_text").selectAll("text")
         .data(new_data)
-        .transition()
+        .transition(variable.timer)
         .text(set_text_content)
         .attr("transform", d => `translate(${setX_text(d) + fontSize/3}, ${setY_text(d) - 10})rotate(-90)`)
     
+    setTimeout( () => {
+        let nodeList = d3.selectAll(".game_title")["_groups"][0];
+        update_line_chart(old_data, new_data, nodeList)
+    , 100})
+
     function setX (d, i) { return xScale(d.Name); }
     function setY (d, i) { return yScale(d.Global_Sales); }
     function setH (d, i) { return variable.hViz - yScale(d.Global_Sales); }
@@ -121,8 +130,17 @@ export function update_bar_chart (old_data, new_data) {
     
 }
 
-export function yScale_for_lines (dataset, d) {
+export function yScale_for_lines (dataset, d, nodeList) {
+    let text_length;
+    console.log(nodeList);
+    for (let i = 0; i < nodeList.length; i++) {
+        if (nodeList[i].__data__.Name == d.Name) {
+            text_length = nodeList[i].getComputedTextLength();
+            break;
+        };
+    }
+
     let yScale = create_yScale(dataset);
-    let value = yScale(d.Global_Sales)
-    return value;
+    let value = yScale(d.Global_Sales) + variable.hPad - variable.pad + variable.hViz - highest_bar; //  - text_length transform Y: bar_G(-167.5) + g(125) = 292.5
+    return value; 
 }

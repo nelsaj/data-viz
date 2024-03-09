@@ -29,7 +29,6 @@ export function create_genre_buttons (dataset) {
                 let filtered_data = filter_by_genre(dataset, genre);
 
                 update_bar_chart(dataset, filtered_data);
-                update_line_chart(dataset, filtered_data);
                 update_sales_circles(filtered_data);
             });
     })

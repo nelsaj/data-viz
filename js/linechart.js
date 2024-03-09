@@ -8,8 +8,6 @@ function create_xScale (dataset) {
     let xScale = d3.scaleBand()
     .domain(dataset.map(d => d.Name))
     .range([0, variable.wViz])
-    .paddingInner(1)
-    .paddingOuter(.5)
     return xScale;
 }
 function create_yScale (dataset) {
@@ -21,6 +19,7 @@ function create_yScale (dataset) {
 
 export async function create_line_chart (dataset) {
     dataset = dataset.slice(0, variable.number_of_games);
+    let nodeList = d3.selectAll(".game_title")["_groups"][0];
 
     const yScale = create_yScale(dataset);
     const xScale = create_xScale(dataset);
@@ -29,7 +28,7 @@ export async function create_line_chart (dataset) {
 
     
     let sharedG = d3.select(".wrapper").append("g")
-        .attr("transform", `translate(0, ${-variable.hPad + 20})`)
+        .attr("transform", `translate(0, ${-variable.hPad + variable.pad})`)
     // .attr("fill", "red");
     
     sharedG // y
@@ -49,7 +48,7 @@ export async function create_line_chart (dataset) {
         .attr("fill", d => get_color(d.Genre))
         .attr("r", 5)
         .attr("cy", (d, i) => yScale(d.Year)) 
-        .attr("cx", (d, i) => xScale(d.Name))
+        .attr("cx", (d, i) => xScale(d.Name) + (d3.select(".bar").attr("width")) / 2);
 
     sharedG.append("g")
         .classed("g_lines", true)
@@ -57,11 +56,11 @@ export async function create_line_chart (dataset) {
         .data(dataset)
         .enter()
         .append("line")
-        .attr("stroke", "black")
-        .attr("x1", (d, i) => xScale(d.Name))
-        .attr("x2", (d, i) => xScale(d.Name))
-        .attr("y1", (d, i) => yScale(d.Year)) 
-        .attr("y2", d => yScale_for_lines(dataset, d));
+        .attr("stroke", d => get_color(d.Genre))
+        .attr("x1", (d, i) => xScale(d.Name)  + (d3.select(".bar").attr("width") * 1.1) / 2) // Multiply with halfs of innerpadding.
+        .attr("x2", (d, i) => xScale(d.Name)  + (d3.select(".bar").attr("width") * 1.1) / 2)
+        .attr("y1", (d, i) => yScale(d.Year) + variable.pad) 
+        .attr("y2", d => yScale_for_lines(dataset, d, nodeList)); 
 
     d3.selectAll(".yAxis .tick")
         .append("line")
@@ -76,22 +75,23 @@ export async function create_line_chart (dataset) {
 
 }
 
-export function update_line_chart (old_data, new_data) {
+export function update_line_chart (old_data, new_data, nodeList) {
     const yScale = create_yScale(old_data);
     // const xScale = create_xScale(new_data);
 
     d3.select(".g_dots").selectAll("circle")
         .data(new_data)
-        .transition()
+        .transition(variable.timer)
         .attr("fill", d => get_color(d.Genre))
         .attr("cy", (d) => yScale(d.Year)) 
         // .attr("fill", d => get_color(d.Genre))
 
     d3.select(".g_lines").selectAll("line")
         .data(new_data)
-        .transition()
-        .attr("y1", (d, i) => yScale(d.Year)) 
-        .attr("y2", d => yScale_for_lines(old_data, d)) 
+        .transition(variable.timer)
+        .attr("stroke", d => get_color(d.Genre))
+        .attr("y1", (d, i) => yScale(d.Year) + variable.pad) 
+        .attr("y2", d => yScale_for_lines(old_data, d, nodeList)) 
 }
 
 // for (let i = 1; i < d3.selectAll(".yAxis .tick").size(); i++) {
