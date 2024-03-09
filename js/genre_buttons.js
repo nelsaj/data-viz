@@ -3,6 +3,7 @@ import { update_bar_chart } from "./bar_chart.js";
 import { filter_by_genre } from "./filtering.js";
 import { get_color } from "./colors.js";
 import { update_line_chart } from "./linechart.js";
+import { update_sales_circles } from "./sales_circles.js";
 
 export function create_genre_buttons (dataset) {
     let button_container = d3.select("body")
@@ -29,6 +30,7 @@ export function create_genre_buttons (dataset) {
 
                 update_bar_chart(dataset, filtered_data);
                 update_line_chart(dataset, filtered_data);
+                update_sales_circles(filtered_data);
             });
     })
 }

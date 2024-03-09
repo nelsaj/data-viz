@@ -59,7 +59,7 @@ export async function create_line_chart (dataset) {
         .attr("x2", variable.wViz);
         // let axisFunctionX = d3.axisBottom(create_xScale(dataset));
 
-    d3.select(".domain").attr("stroke", "");
+    d3.select(".domain").attr("stroke", null);
 
 }
 
