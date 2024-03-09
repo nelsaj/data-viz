@@ -81,14 +81,16 @@ export function update_line_chart (old_data, new_data, nodeList) {
 
     d3.select(".g_dots").selectAll("circle")
         .data(new_data)
-        .transition(variable.timer)
+        .transition()
+        .duration(variable.timer)
         .attr("fill", d => get_color(d.Genre))
         .attr("cy", (d) => yScale(d.Year)) 
         // .attr("fill", d => get_color(d.Genre))
 
     d3.select(".g_lines").selectAll("line")
         .data(new_data)
-        .transition(variable.timer)
+        .transition()
+        .duration(variable.timer)
         .attr("stroke", d => get_color(d.Genre))
         .attr("y1", (d, i) => yScale(d.Year) + variable.pad) 
         .attr("y2", d => yScale_for_lines(old_data, d, nodeList)) 

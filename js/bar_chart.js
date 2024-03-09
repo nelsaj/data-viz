@@ -95,7 +95,8 @@ export function update_bar_chart (old_data, new_data) {
     console.log(new_data);
     d3.select(".g_bars").selectAll("rect")
         .data(new_data)
-        .transition(variable.timer)
+        .transition()
+        .duration(variable.timer)
         .attr("fill", d => get_color(d.Genre))
         .attr("height", setH)
         .attr("y", setY);
@@ -112,7 +113,8 @@ export function update_bar_chart (old_data, new_data) {
 
     d3.select(".g_text").selectAll("text")
         .data(new_data)
-        .transition(variable.timer)
+        .transition()
+        .duration(variable.timer)
         .text(set_text_content)
         .attr("transform", d => `translate(${setX_text(d) + fontSize/3}, ${setY_text(d) - 10})rotate(-90)`)
     

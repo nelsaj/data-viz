@@ -6,4 +6,4 @@ wPad = (wSvg - wViz) / 2,
 hPad = (hSvg - hViz) / 2,
 pad = 20,
 number_of_games = 20,
-timer = 1000;
+timer = 400;
