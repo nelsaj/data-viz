@@ -1,6 +1,7 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import { get_color } from "./colors.js";
 import * as variable from "./variables.js";
+import { yScale_for_lines } from "./bar_chart.js";
 
 
 function create_xScale (dataset) {
@@ -50,6 +51,18 @@ export async function create_line_chart (dataset) {
         .attr("cy", (d, i) => yScale(d.Year)) 
         .attr("cx", (d, i) => xScale(d.Name))
 
+    sharedG.append("g")
+        .classed("g_lines", true)
+        .selectAll("rect")
+        .data(dataset)
+        .enter()
+        .append("line")
+        .attr("stroke", "black")
+        .attr("x1", (d, i) => xScale(d.Name))
+        .attr("x2", (d, i) => xScale(d.Name))
+        .attr("y1", (d, i) => yScale(d.Year)) 
+        .attr("y2", d => yScale_for_lines(dataset, d));
+
     d3.selectAll(".yAxis .tick")
         .append("line")
         .classed("thickLine", true)
@@ -73,6 +86,12 @@ export function update_line_chart (old_data, new_data) {
         .attr("fill", d => get_color(d.Genre))
         .attr("cy", (d) => yScale(d.Year)) 
         // .attr("fill", d => get_color(d.Genre))
+
+    d3.select(".g_lines").selectAll("line")
+        .data(new_data)
+        .transition()
+        .attr("y1", (d, i) => yScale(d.Year)) 
+        .attr("y2", d => yScale_for_lines(old_data, d)) 
 }
 
 // for (let i = 1; i < d3.selectAll(".yAxis .tick").size(); i++) {
