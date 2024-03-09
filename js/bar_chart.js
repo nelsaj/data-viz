@@ -141,6 +141,6 @@ export function yScale_for_lines (dataset, d, nodeList) {
     }
 
     let yScale = create_yScale(dataset);
-    let value = yScale(d.Global_Sales) + variable.hPad - variable.pad + variable.hViz - highest_bar; //  - text_length transform Y: bar_G(-167.5) + g(125) = 292.5
+    let value = yScale(d.Global_Sales) + variable.hPad - variable.pad + variable.hViz - highest_bar - text_length - variable.pad; //  transform Y: bar_G(-167.5) + g(125) = 292.5
     return value; 
 }

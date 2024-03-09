@@ -48,7 +48,7 @@ export async function create_line_chart (dataset) {
         .attr("fill", d => get_color(d.Genre))
         .attr("r", 5)
         .attr("cy", (d, i) => yScale(d.Year)) 
-        .attr("cx", (d, i) => xScale(d.Name) + (d3.select(".bar").attr("width")) / 2);
+        .attr("cx", (d, i) => xScale(d.Name) + (d3.select(".bar").attr("width") * 1.1) / 2);
 
     sharedG.append("g")
         .classed("g_lines", true)
