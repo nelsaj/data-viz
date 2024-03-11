@@ -9,7 +9,7 @@ export function create_genre_buttons (dataset) {
     let button_container = d3.select("body")
         .append("div")
 
-    button_container.classed("button_container")
+    button_container.classed("button_container", true)
     let genres = [];
 
     dataset.forEach( object => {
@@ -21,6 +21,7 @@ export function create_genre_buttons (dataset) {
     genres.forEach( genre => {
         button_container.append("button")   
             .text(genre)
+            .classed("filter_button", true)
             .style("background-color", () => get_color(genre))
             .on('click', async (event) => {
                 button_container.select("button.active").classed("active", false);
