@@ -19,5 +19,5 @@ import { create_sales_circles } from "./js/sales_circles.js";
 
     await create_line_chart(dataset);
 
-    // await create_sales_circles(dataset);
+    await create_sales_circles(dataset);
 }) ()
