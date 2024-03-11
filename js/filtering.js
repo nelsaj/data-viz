@@ -14,6 +14,7 @@ export async function structure_data () {
                 Name: object.Name,
                 Year: parseInt(object.Year),
                 Genre: object.Genre,
+                Publisher: object.Publisher,
                 Platforms: [object.Platform],
                 NA_Sales: Number(object.NA_Sales),
                 EU_Sales: Number(object.EU_Sales),

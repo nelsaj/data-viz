@@ -2,6 +2,8 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import * as variable from "./variables.js";
 import { get_color } from "./colors.js";
 import { update_line_chart } from "./linechart.js";
+import { tooltip } from "./tooltip.js";
+
 let highest_bar;
 
 function create_xScale(dataset) {
@@ -43,12 +45,18 @@ export async function create_bar_chart (dataset) {
         .data(dataset)
         .enter()
         .append("rect")  
-        .classed("bar", true) 
+        .attr("class", "bar") 
         .attr("fill", d => get_color(d.Genre))
         .attr("width", wBar)
         .attr("x", setX)
         .attr("y", setY)
         .attr("height", setH)
+        .attr("stroke-width", 5)
+
+    gviz_bars.selectAll("rect") 
+        .on("mouseover", tooltip.mouseover)
+        .on("mousemove", (event, d) => tooltip.mousemove(event, d, `<p>Title: ${d.Name}</p><p>Global Sales: ${d.Global_Sales} million</p><p>Publisher: ${d.Publisher}</p><p>Platforms: ${d.Platforms.join(", ")}</p>`))
+        .on("mouseleave", tooltip.mouseleave)
 
     highest_bar = d3.select(".bar_G").select(".bar").attr("height");
 
@@ -68,7 +76,6 @@ export async function create_bar_chart (dataset) {
         // .attr("transform", d => `translate(${setX_text(d)}, ${setY_text(d)})rotate(-90)`)
         .text(set_text_content)
 
-
     const textElement = document.querySelector(".game_title");
     let style = window.getComputedStyle(textElement);
     let fontSize = style.fontSize;
@@ -78,8 +85,6 @@ export async function create_bar_chart (dataset) {
     d3.selectAll(".game_title") 
         .attr("transform", d => `translate(${setX_text(d) + fontSize/4}, ${setY_text(d) - 10})rotate(-90)`)
     
-
-
     function setX (d, i) { return xScale(d.Name); }
     function setY (d, i) { return yScale(d.Global_Sales); }
     function setH (d, i) { return variable.hViz - yScale(d.Global_Sales); }
@@ -93,13 +98,19 @@ export function update_bar_chart (old_data, new_data) {
     let yScale = create_yScale(old_data);
 
     console.log(new_data);
-    d3.select(".g_bars").selectAll("rect")
+    d3.select(".g_bars").selectAll(".bar")
         .data(new_data)
         .transition()
         .duration(variable.timer)
         .attr("fill", d => get_color(d.Genre))
         .attr("height", setH)
-        .attr("y", setY);
+        .attr("y", setY)
+
+    d3.select(".g_bars").selectAll(".bar")
+        .on("mouseover", tooltip.mouseover)
+        .on("mousemove", (event, d) => tooltip.mousemove(event, d, `<p>Title: ${d.Name}</p><p>Global Sales: ${d.Global_Sales} million</p><p>Platforms: ${d.Platforms.join(", ")}</p>`))
+        .on("mouseleave", tooltip.mouseleave)
+    
 
     // const sharedG = d3.select(".bar_G");
     // sharedG
@@ -134,7 +145,6 @@ export function update_bar_chart (old_data, new_data) {
 
 export function yScale_for_lines (dataset, d, nodeList) {
     let text_length;
-    console.log(nodeList);
     for (let i = 0; i < nodeList.length; i++) {
         if (nodeList[i].__data__.Name == d.Name) {
             text_length = nodeList[i].getComputedTextLength();

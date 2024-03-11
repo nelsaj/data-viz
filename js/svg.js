@@ -8,6 +8,10 @@ export async function create_svg() {
     let svg = d3.select("body").append("svg")
         .attr("width", variable.wSvg).attr("height", variable.hSvg);
     
+    let tooltip = d3.select("body").append("div")
+    .style("opacity", 0)
+    .classed("tooltip", true);
+    
 }
 
 
