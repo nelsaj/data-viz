@@ -1,4 +1,4 @@
-import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+// import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import * as variable from "./variables.js";
 
 function create_xScale(dataset) {
@@ -21,7 +21,7 @@ function create_yScale (dataset) {
 function testScale (Global_Sales) {
     let testScale = d3.scaleLinear()
         .domain([0, Global_Sales])
-        .range([3, 33])
+        .range([4, 34])
     return testScale;
 }
 
@@ -50,8 +50,9 @@ export async function create_sales_circles (dataset) {
 
 }
 
-function create_circle (parent, sale_type, color, index, past = 0) {
-    // console.log(past);
+let pastY = null;
+function create_circle (parent, sale_type, color, index, past) {
+    let pastPastY = null;
 
     let circle = parent
         .append("circle")
@@ -63,15 +64,17 @@ function create_circle (parent, sale_type, color, index, past = 0) {
         .attr("cy", d => { 
             let radie = testScale(d.Global_Sales)(d[`${sale_type}_Sales`]);
             let pastR = testScale(d.Global_Sales)(d[`${past}_Sales`]);
-            if(index === 0) return radie;
-            else return radie + (pastR * 2);
+            if(index === 0) {pastY = radie; pastR = radie; return radie}
+            else {
+                pastPastY = pastY;
+                pastY = pastPastY + pastR; 
+                return pastPastY + pastR};
         })
-        // .attr("transform", "rotate(180)")
 
         .attr("class", sale_type + "_sales")
-        .attr("id", d => d.Name.replaceAll(" ", "").replaceAll("/", "").replaceAll(":", "") + "_" + sale_type)
+        .attr("id", d => d.Name.replaceAll(" ", "").replaceAll("/", "").replaceAll(":", "") + "_" + sale_type);
 
-        return circle;
+        // return circle;
 }
 
 function init_circles (parent) {
@@ -90,11 +93,11 @@ function init_circles (parent) {
             .domain(sale_types);
         // let legendColor = d3.legendColor
         //     .scale(color_scale)
-        console.log(d3.legendColor());
+        console.log(d3.legendsColor);
 
         let past = 0;
         if(i !== 0) past = sale_types_obj[i - 1][0];
-        let circle = create_circle(parent, type[0], color_scale(type[0]), i, past);
+        create_circle(parent, type[0], color_scale(type[0]), i, past);
     })
 }
 
