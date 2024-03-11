@@ -1,5 +1,9 @@
 body {
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .game_title {
@@ -7,7 +11,8 @@ body {
 }
 
 .bar {
-
+    stroke: #0000;
+    stroke-width: 10px;
 }
 
 .dot {
@@ -22,4 +27,53 @@ body {
     border-width: 2px;
     border-radius: 5px;
     padding: 5px;
+}
+
+h1 {
+    margin: 100px;
+    text-align: center;
+}
+
+.text_wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 50px;
+}
+
+.text_box {
+    height: 500px;
+    width: 500px;
+    border: solid 2px black;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+svg{
+    margin-top: 100px;
+}
+
+.button_container {
+    display: flex;
+    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    margin-bottom: 100px;
+}
+
+.filter_button {
+    height: 50px;
+    width: 100px;
+    border: solid white 1px;
+    border-radius: 5px;
+}
+
+.filter_button:hover {
+    opacity: 0.5;
+}
+
+.active {
+    border: 1px solid black;
 }

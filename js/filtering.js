@@ -40,6 +40,10 @@ export async function structure_data () {
 }
 
 export function filter_by_genre(dataset, genre) {
+    if (genre == undefined) {
+        dataset = dataset.slice(0, variable.number_of_games);
+        return dataset
+    }
     dataset = dataset.filter( object => {
         return object.Genre == genre;
     }) 
@@ -50,4 +54,3 @@ export function filter_by_genre(dataset, genre) {
 
     return dataset;
 }
- 

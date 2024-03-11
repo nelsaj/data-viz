@@ -9,7 +9,7 @@ export function create_genre_buttons (dataset) {
     let button_container = d3.select("body")
         .append("div")
 
-    button_container.classed("button_container")
+    button_container.classed("button_container", true)
     let genres = [];
 
     dataset.forEach( object => {
@@ -21,11 +21,21 @@ export function create_genre_buttons (dataset) {
     genres.forEach( genre => {
         button_container.append("button")   
             .text(genre)
+            .classed("filter_button", true)
             .style("background-color", () => get_color(genre))
             .on('click', async (event) => {
+    
+                if(event.target.classList.contains("active")) {
+                    let filtered_data = filter_by_genre(dataset, undefined);
+                    console.log("fel")
+                    event.target.classList.remove("active");
+                    update_bar_chart(dataset, filtered_data);
+                    update_sales_circles(filtered_data);
+                    return;
+                }
+
                 button_container.select("button.active").classed("active", false);
                 event.target.classList.add("active");
-        
                 let filtered_data = filter_by_genre(dataset, genre);
 
                 update_bar_chart(dataset, filtered_data);
