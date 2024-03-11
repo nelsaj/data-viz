@@ -7,3 +7,8 @@ body {
 }
 
 .bar {}
+
+.dot {
+    stroke: #0000;
+    stroke-width: 10px;
+}

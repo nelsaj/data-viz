@@ -28,11 +28,6 @@ function testScale (Global_Sales) {
 export async function create_sales_circles (dataset) {
     dataset = dataset.slice(0, variable.number_of_games);
 
-    var root = d3.hierarchy(dataset);
-    let pack = d3.pack()
-        .size([250,250]);
-    console.log(pack(root));
-
     let xScale = create_xScale(dataset);
     let yScale = create_yScale(dataset);
 
@@ -48,38 +43,65 @@ export async function create_sales_circles (dataset) {
 
     for (let i = 0; i < dataset.length; i++) { 
         let test = d3.select(`.test:nth-child(${i + 1})`).selectAll('rect').data([dataset[i]]).enter();
-        // create_circle(test, "Global", "pink", 0);
-        create_circle(test, "NA", "blue", 0);
-        create_circle(test, "EU", "green", 1);
-        create_circle(test, "JP", "red", 2);
-        create_circle(test, "Other", "brown", 3);
+
+        init_circles(test);
 
     }
 
 }
 
-function create_circle (parent, sale_type, color, index) {
+function create_circle (parent, sale_type, color, index, past = 0) {
+    // console.log(past);
 
-    let circle = parent.append("circle");
+    let circle = parent
+        .append("circle")
+        .transition()
+        .duration(variable.timer)
     circle
         .attr("fill", color)
-        .classed(sale_type + "_sales", true)
-        .attr("cy", 7 * index)
         .attr("r", d => testScale(d.Global_Sales)(d[`${sale_type}_Sales`]))
-        // .attr("r", d => d[`${sale_type}_Sales`]/d.Global_Sales * 100)
-        .transition() ////// :/
+        .attr("cy", d => { 
+            let radie = testScale(d.Global_Sales)(d[`${sale_type}_Sales`]);
+            let pastR = testScale(d.Global_Sales)(d[`${past}_Sales`]);
+            if(index === 0) return radie;
+            else return radie + (pastR * 2);
+        })
+        // .attr("transform", "rotate(180)")
+
+        .attr("class", sale_type + "_sales")
+        .attr("id", d => d.Name.replaceAll(" ", "").replaceAll("/", "").replaceAll(":", "") + "_" + sale_type)
 
         return circle;
 }
 
+function init_circles (parent) {
+    let sale_types = ["NA", "EU", "JP", "Other"];
+    let sale_types_obj = [];
+
+    parent.each(d => {
+        sale_types.forEach(type => sale_types_obj.push([type, d[`${type}_Sales`]]));
+    });
+
+    sale_types_obj.sort((a, b) => b[1] - a[1]);
+
+    sale_types_obj.forEach((type, i) => {
+        let colors_test = ["blue", "green", "red", "brown"];
+        let color_scale = d3.scaleOrdinal(colors_test)
+            .domain(sale_types);
+        // let legendColor = d3.legendColor
+        //     .scale(color_scale)
+        console.log(d3.legendColor());
+
+        let past = 0;
+        if(i !== 0) past = sale_types_obj[i - 1][0];
+        let circle = create_circle(parent, type[0], color_scale(type[0]), i, past);
+    })
+}
+
 export function update_sales_circles (new_data) {
-    // d3.selectAll(".test").html("");
+    d3.selectAll(".test").html("");
     for (let i = 0; i < new_data.length; i++) { 
         let test = d3.select(`.test:nth-child(${i + 1})`).selectAll('rect').data([new_data[i]]).enter();
-        create_circle(test, "NA", "blue", 0);
-        create_circle(test, "EU", "green", 1);
-        create_circle(test, "JP", "red", 2);
-        create_circle(test, "Other", "brown", 3);
-
+        init_circles(test);
     }
 }
