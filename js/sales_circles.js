@@ -21,13 +21,13 @@ function create_yScale (dataset) {
 function testScale (Global_Sales) {
     let testScale = d3.scaleLinear()
         .domain([0, Global_Sales])
-        .range([4, 34])
+        .range([4, 28])
     return testScale;
 }
 
 function create_colorScale () {
     let sale_types = ["NA", "EU", "JP", "Other"];
-    let colors = ["aqua", "yellowgreen", "hotpink", "yellow"];
+    let colors = ["aqua", "yellowgreen", "hotpink", "lightgray"];
 
     let color_scale = d3.scaleOrdinal()
         .domain(sale_types)
