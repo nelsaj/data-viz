@@ -27,7 +27,7 @@ function testScale (Global_Sales) {
 
 function create_colorScale () {
     let sale_types = ["NA", "EU", "JP", "Other"];
-    let colors = ["blue", "green", "red", "brown"];
+    let colors = ["aqua", "yellowgreen", "hotpink", "yellow"];
 
     let color_scale = d3.scaleOrdinal()
         .domain(sale_types)

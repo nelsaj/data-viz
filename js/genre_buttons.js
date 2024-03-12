@@ -22,7 +22,8 @@ export function create_genre_buttons (dataset) {
         button_container.append("button")   
             .text(genre)
             .classed("filter_button", true)
-            .style("background-color", () => get_color(genre))
+            .style("border", `1px solid ${get_color(genre)}`)
+            .style("color", get_color(genre))
             .on('click', async (event) => {
     
                 if(event.target.classList.contains("active")) {
@@ -37,6 +38,8 @@ export function create_genre_buttons (dataset) {
                 button_container.select("button.active").classed("active", false);
                 event.target.classList.add("active");
                 let filtered_data = filter_by_genre(dataset, genre);
+
+                document.body.style.setProperty('--genre_color', get_color(genre));
 
                 update_bar_chart(dataset, filtered_data);
                 update_sales_circles(filtered_data);
