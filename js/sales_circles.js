@@ -1,11 +1,11 @@
 // import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import * as variable from "./variables.js";
+import { tooltip } from "./tooltip.js";
 
 function create_xScale(dataset) {
     let xScale = d3.scaleBand()
             .domain(dataset.map(d => d.Name))
             .range([0, variable.wViz])
-            .paddingInner(1)
     return xScale;
 }
 
@@ -39,7 +39,7 @@ export async function create_sales_circles (dataset) {
         .enter()
         .append("g")
         .classed("test", true)
-        .attr("transform", d => `translate(${xScale(d.Name)},${0})`); 
+        .attr("transform", d => `translate(${xScale(d.Name) + (d3.select(".bar").attr("width") * 1.1) / 2},${-variable.hPad + variable.pad * 3})`); 
 
     for (let i = 0; i < dataset.length; i++) { 
         let test = d3.select(`.test:nth-child(${i + 1})`).selectAll('rect').data([dataset[i]]).enter();
@@ -56,8 +56,13 @@ function create_circle (parent, sale_type, color, index, past) {
 
     let circle = parent
         .append("circle")
-        .transition()
-        .duration(variable.timer)
+        .on("mouseover", tooltip.mouseover)
+        .on("mousemove", (event, d) => tooltip.mousemove(event, d, `<p>Title: ${d.Name}</p>`))
+        .on("mouseleave", tooltip.mouseleave)
+        // .transition()
+        // .duration(variable.timer)
+
+
     circle
         .attr("fill", color)
         .attr("r", d => testScale(d.Global_Sales)(d[`${sale_type}_Sales`]))
@@ -72,7 +77,12 @@ function create_circle (parent, sale_type, color, index, past) {
         })
 
         .attr("class", sale_type + "_sales")
-        .attr("id", d => d.Name.replaceAll(" ", "").replaceAll("/", "").replaceAll(":", "") + "_" + sale_type);
+        .attr("id", d => d.Name.replaceAll(" ", "").replaceAll("/", "").replaceAll(":", "") + "_" + sale_type)
+
+    circle
+        .on("mouseover", tooltip.mouseover)
+        .on("mousemove", (event, d) => tooltip.mousemove(event, d, `<p>Title: ${d.Name}</p>`))
+        .on("mouseleave", tooltip.mouseleave)
 
         // return circle;
 }

@@ -1,7 +1,7 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
 export const tooltip = {
-    mouseover(event, d) {
+    mouseover() {
         d3.select(".tooltip")
             .style("opacity", 1)
             .style("z-index", 2)
@@ -12,7 +12,7 @@ export const tooltip = {
             .style("left", (event.pageX + 20) + "px")
             .style("top", (event.pageY + "px"))
     },
-    mouseleave(event, d) {
+    mouseleave() {
         d3.select(".tooltip")
             .style("opacity", 0)
             .style("z-index", 0)

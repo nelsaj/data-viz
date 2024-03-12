@@ -28,7 +28,7 @@ export async function create_line_chart (dataset) {
 
     
     let sharedG = d3.select(".wrapper").append("g")
-        .attr("transform", `translate(0, ${-variable.hPad + variable.pad})`)
+        .attr("transform", `translate(0, 0)`)
     // .attr("fill", "red");
     
     sharedG // y

@@ -1,5 +1,5 @@
 export const hSvg = 750, 
-wSvg = 1300,
+wSvg = 1600,
 wViz = .8 * wSvg,
 hViz = .5 * hSvg,
 wPad = (wSvg - wViz) / 2,
