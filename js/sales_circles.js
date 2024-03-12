@@ -52,6 +52,7 @@ export async function create_sales_circles (dataset) {
     d3.select("svg").append("g")
         .attr("class", "legendHolder")
         .call(legend)
+        .attr("transform", `translate(0, ${+variable.pad * 3})`)
         // .attr("transform", "translate(50, 50)")
 
     sharedG
