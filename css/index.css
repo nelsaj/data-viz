@@ -78,3 +78,7 @@ svg{
 .active {
     border: 1px solid black;
 }
+
+.sales {
+    opacity: .5;
+}

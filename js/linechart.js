@@ -66,14 +66,30 @@ export async function create_line_chart (dataset) {
         .attr("y1", (d, i) => yScale(d.Year) + variable.pad) 
         .attr("y2", d => yScale_for_lines(dataset, d, nodeList)); 
 
-    d3.selectAll(".yAxis .tick")
+    let ticks = d3.selectAll(".yAxis .tick")
+
+    ticks
+        .selectAll("line")
+        .remove();
+
+    ticks
         .append("line")
         .classed("thickLine", true)
         .attr("stroke-width", 2.5)
         .attr("stroke", "black")
         .attr("x1", 0)
         .attr("x2", variable.wViz);
-        // let axisFunctionX = d3.axisBottom(create_xScale(dataset));
+
+    ticks
+        .append("line")
+        .classed("thinLine", true)
+        .attr("stroke-width", 1)
+        .attr("stroke", "black")
+        .attr("x1", 0)
+        .attr("x2", variable.wViz)
+        .attr("y1", 15)
+        .attr("y2", 15)
+        .attr("opacity", (d, i) => i === 0 ? 0 : 1)
 
     d3.select(".domain").attr("stroke", null);
 

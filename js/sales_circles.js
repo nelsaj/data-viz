@@ -25,13 +25,34 @@ function testScale (Global_Sales) {
     return testScale;
 }
 
+function create_colorScale () {
+    let sale_types = ["NA", "EU", "JP", "Other"];
+    let colors = ["blue", "green", "red", "brown"];
+
+    let color_scale = d3.scaleOrdinal()
+        .domain(sale_types)
+        .range(colors)
+
+    return color_scale;
+}
+
 export async function create_sales_circles (dataset) {
     dataset = dataset.slice(0, variable.number_of_games);
 
     let xScale = create_xScale(dataset);
     let yScale = create_yScale(dataset);
+    let color_scale = create_colorScale();
 
     let sharedG = d3.select(".wrapper").append("g");
+    sharedG.classed("salesCircles", true)
+
+    let legend = d3.legendColor(color_scale);
+    legend
+        .scale(color_scale)
+    d3.select("svg").append("g")
+        .attr("class", "legendHolder")
+        .call(legend)
+        // .attr("transform", "translate(50, 50)")
 
     sharedG
         .selectAll("rect")
@@ -56,11 +77,15 @@ function create_circle (parent, sale_type, color, index, past) {
 
     let circle = parent
         .append("circle")
+
+    circle
+        .transition()
+        .duration(variable.timer)
+    
+    circle
         .on("mouseover", tooltip.mouseover)
-        .on("mousemove", (event, d) => tooltip.mousemove(event, d, `<p>Title: ${d.Name}</p>`))
+        .on("mousemove", (event, d) => tooltip.mousemove(event, d, `<p>Title: ${d.Name}<br>${sale_type} Sales: ${d[`${sale_type}_Sales`].toFixed(2)} million sales</p>`))
         .on("mouseleave", tooltip.mouseleave)
-        // .transition()
-        // .duration(variable.timer)
 
 
     circle
@@ -77,19 +102,15 @@ function create_circle (parent, sale_type, color, index, past) {
         })
 
         .attr("class", sale_type + "_sales")
+        .attr("class", "sales")
         .attr("id", d => d.Name.replaceAll(" ", "").replaceAll("/", "").replaceAll(":", "") + "_" + sale_type)
-
-    circle
-        .on("mouseover", tooltip.mouseover)
-        .on("mousemove", (event, d) => tooltip.mousemove(event, d, `<p>Title: ${d.Name}</p>`))
-        .on("mouseleave", tooltip.mouseleave)
-
-        // return circle;
 }
+
 
 function init_circles (parent) {
     let sale_types = ["NA", "EU", "JP", "Other"];
     let sale_types_obj = [];
+    let color_scale = create_colorScale();
 
     parent.each(d => {
         sale_types.forEach(type => sale_types_obj.push([type, d[`${type}_Sales`]]));
@@ -98,13 +119,6 @@ function init_circles (parent) {
     sale_types_obj.sort((a, b) => b[1] - a[1]);
 
     sale_types_obj.forEach((type, i) => {
-        let colors_test = ["blue", "green", "red", "brown"];
-        let color_scale = d3.scaleOrdinal(colors_test)
-            .domain(sale_types);
-        // let legendColor = d3.legendColor
-        //     .scale(color_scale)
-        console.log(d3.legendsColor);
-
         let past = 0;
         if(i !== 0) past = sale_types_obj[i - 1][0];
         create_circle(parent, type[0], color_scale(type[0]), i, past);

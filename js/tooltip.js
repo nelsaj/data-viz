@@ -15,6 +15,6 @@ export const tooltip = {
     mouseleave() {
         d3.select(".tooltip")
             .style("opacity", 0)
-            .style("z-index", 0)
+            .style("z-index", -1)
     }
 }
