@@ -1,6 +1,13 @@
+* {
+    --black: #191a1e;
+    --white: #dde2e8;
+
+    box-sizing: border-box;
+    color: var(--white);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 body {
-        --black: #191a1e;
-        --white: #ffffff;
 
     margin: 0;
     display: flex;
@@ -20,6 +27,7 @@ body {
 .bar {
     stroke: #0000;
     stroke-width: 10px;
+    rx: 2px;
 }
 
 .dot {
@@ -33,17 +41,24 @@ body {
 
     backdrop-filter: blur(5px);
 
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.2);
 
     border: solid;
     border-width: 2px;
     border-radius: 5px;
 
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(100, 100, 100, 0.2);
 
-    padding: 10px;
+    padding: 15px;
 
     color: var(--white);
+
+    display: flex;
+    flex-direction: column;
+}
+
+.tooltip span {
+    font-weight: bolder;
 }
 
 h1 {
@@ -89,7 +104,6 @@ svg{
     background-color: rgba(0, 255, 255, 0);
     border-radius: 5px;
     text-transform: uppercase;
-
 }
 
 .filter_button:hover {
@@ -115,4 +129,15 @@ svg{
 }
 .thinLine {
     opacity: .3;
+}
+
+
+.legendCells * {
+    text-transform: uppercase;
+}
+.legendCells text {
+    fill: var(--white);
+}
+.swatch {
+    rx: 50%;
 }

@@ -81,10 +81,8 @@ function create_circle (parent, sale_type, color, index, past) {
     
     circle
         .on("mouseover", tooltip.mouseover)
-        .on("mousemove", (event, d) => tooltip.mousemove(event, d, `<p>Title: ${d.Name}<br>${sale_type} Sales: ${d[`${sale_type}_Sales`].toFixed(2)} million sales</p>`))
+        .on("mousemove", (event, d) => tooltip.mousemove(event, d, `<p>Title: ${d.Name}</p><p>${sale_type} Sales: ${d[`${sale_type}_Sales`].toFixed(2)} million sales</p>`))
         .on("mouseleave", tooltip.mouseleave)
-
-    
     
     circle
         .transition()

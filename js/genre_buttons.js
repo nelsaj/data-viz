@@ -22,7 +22,7 @@ export function create_genre_buttons (dataset) {
         button_container.append("button")   
             .text(genre)
             .classed("filter_button", true)
-            .style("border", `1px solid ${get_color(genre)}`)
+            .style("border", `2px solid ${get_color(genre)}`)
             .style("color", get_color(genre))
             .on('click', async (event) => {
     

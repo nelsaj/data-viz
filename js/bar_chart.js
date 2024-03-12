@@ -55,7 +55,7 @@ export async function create_bar_chart (dataset) {
 
     gviz_bars.selectAll("rect") 
         .on("mouseover", tooltip.mouseover)
-        .on("mousemove", (event, d) => tooltip.mousemove(event, d, `<p>Title: ${d.Name}</p><p>Global Sales: ${d.Global_Sales.toFixed(2)} million</p><p>Publisher: ${d.Publisher}</p><p>Platforms: ${d.Platforms.join(", ")}</p>`))
+        .on("mousemove", (event, d) => tooltip.mousemove(event, d, `<p><span>${d.Name}<span></p><p>Global Sales: ${d.Global_Sales.toFixed(2)} million</p><p>Publisher: ${d.Publisher}</p><p>Platforms: ${d.Platforms.join(", ")}</p>`))
         .on("mouseleave", tooltip.mouseleave)
 
     highest_bar = d3.select(".bar_G").select(".bar").attr("height");
