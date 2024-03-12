@@ -78,20 +78,21 @@ function create_circle (parent, sale_type, color, index, past) {
 
     let circle = parent
         .append("circle")
-
-    circle
-        .transition()
-        .duration(variable.timer)
     
     circle
         .on("mouseover", tooltip.mouseover)
         .on("mousemove", (event, d) => tooltip.mousemove(event, d, `<p>Title: ${d.Name}<br>${sale_type} Sales: ${d[`${sale_type}_Sales`].toFixed(2)} million sales</p>`))
         .on("mouseleave", tooltip.mouseleave)
 
+    
+    
+    circle
+        .transition()
+        .duration(variable.timer)
+        .attr("r", d => testScale(d.Global_Sales)(d[`${sale_type}_Sales`]))
 
     circle
         .attr("fill", color)
-        .attr("r", d => testScale(d.Global_Sales)(d[`${sale_type}_Sales`]))
         .attr("cy", d => { 
             let radie = testScale(d.Global_Sales)(d[`${sale_type}_Sales`]);
             let pastR = testScale(d.Global_Sales)(d[`${past}_Sales`]);
