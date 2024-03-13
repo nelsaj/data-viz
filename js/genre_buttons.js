@@ -6,7 +6,7 @@ import { update_sales_circles } from "./sales_circles.js";
 import { genres } from "../index.js";
 
 export function create_genre_buttons (dataset) {
-    let button_container = d3.select("body")
+    let button_container = d3.select("#buttonHolder")
         .append("div")
 
     button_container.classed("button_container", true)

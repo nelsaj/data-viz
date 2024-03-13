@@ -9,47 +9,63 @@
     <link rel="stylesheet" href="./css/index.css">
 </head>
 <body>
-    <h1>WEBBASERAD<br>DATAVISUALISERING<br>VT-24</h1>
-    
     <div class="text_wrapper">
-        <div class="text_box">
-            <h3>Källa och Trovärdighet</h3>
-            <p>Datan är tagen från kaggle.com och publicerad av användaren GregorySmith. Användaren har tagit datan från vgchartz.com som är en webbsida där man kan hitta statistik om tv- och dator -spel. Vi anser att datan är trovärdig då vi genomförde ett par stickprov för att se ifall något av spelens data inte stämde. 
 
-                Datan är från 2016 och innehåller inte data från mobilspel utan endast konsoler och pc, detta kan påverka datan i relation till dagens statistik. Datans innehåll sträcker sig från 1980 till 2016 och innehåller spel och sålt minst 100 000 exemplar. 
-                </p>
+        <div id="headerContent">
+            <h1>Top 20 Best Selling Videogames of All Time</h1>
+            <h3>(as of 2016)</h3>
+            <p>Source: <a href="https://www.kaggle.com/datasets/gregorut/videogamesales">Video Game Sales</a></p>
         </div>
-    
-        <div class="text_box">
-            <h3>Databearbetningen</h3>
-            <p>Datan bestod av totalt mer än 16500 objekt. Detta var eftersom att spel som släppts på olika plattformar räknades som olika objekt. Vi bestämde oss för att lägga ihop dessa element till ett ihopsatt objekt där vi även la ihop alla totala säljningar för respektive plattform. Vi bestämde oss för att visualisera top 20 spel beroende på genrer och därför förkortade vi datan.</p>
-        </div>
-    
-        <div class="text_box">
-            <h3>Målgrupp, Relevans och Önskad effekt</h3>
+
+        <div id="desc">
+            <p>Med vår visualisering vill vi visa vilka spel som har blivit sålda mest beroende på genre. Varje färg representerar en genre, som man kan se på knapparna. Om du trycker på en knapp får du top 20 spel inom den genren. Ovanför staplarna kan man se vilket år spelet släpptes. Utöver det, kan man även se säljningar beroende på plats genom att titta på cirklarna ovan. Storlekarna på cirklarna varierar beroende på antal procent av totala försäljningen av det spelet. Om man placerar muspekaren över staplarna och cirklarna så kan man få mer information om respektive spel.</p> 
             <p>Vår målgrupp är personer inom spelindustrin som till exempel är intresserade av en överblick av populära spel. Exempelvis kan man sortera datan beroende på genrer och på så sätt se vad som är efterfrågat. Utöver det kan man se vilka genrer som är populära, vilka genrer har blivit stora på senare tid och vilka genrer har minskat och vilka slags spel som har stor efterfrågan beroende på plats. Den önskade effekten är att visualisera olika insikter om spelgenrer.</p>
         </div>
-    
-        <div class="text_box">
-            <h3>Lärdomar</h3>
-            <p>Vi har lärt oss att genomföra ett större visualiseringsprojekt som innehåller flera olika skalor. Dessutom har vi lärt oss hur man ska placera grupper på olika ställen i samma svg element, att arbeta med legender, att applicera många färger med scaleOrdinal och sist men inte minst att arbeta som ett team <3</p>
+
+        <div id="svgContent">
+            <div id="svgHolder"></div>
+            <div id="buttonHolder"></div>
         </div>
+
+    <div id="underSvg">
+        
+        <div id="content_holder">
+            <div class="text_box">
+                <h2>Källa och Trovärdighet</h2>
+                <p>Datan är tagen från kaggle.com och publicerad av användaren GregorySmith. Användaren har tagit datan från vgchartz.com som är en webbsida där man kan hitta statistik om tv- och dator -spel. Vi anser att datan är trovärdig då vi genomförde ett par stickprov för att se ifall något av spelens data inte stämde.
     
-        <div class="text_box">
-            <h3>Vad var svårast?</h3>
-            <p>Ett av de jobbigare momenten var att koppla samman linjerna mellan cirkeldiagrammet och stapeldiagrammet. Det svåra var att få linjen att börja vid speltitelns slut och att få linjen att avsluta precis innan cirkeln över. Placeringen av “försäljnings-cirklarna” var också svår då det krävde logik tänkande och det var en utmaning. </p>
-        </div>
-    
-        <div class="text_box">
-            <h3>Rekommendationer för Studenter i Framtiden</h3>
-            <p>- Börja i god tid. <br>
-                - Gör d3 övningar först, det underlättar för projektet.<br>
-                - Sikta rimligt, inte för lågt eller för högt.<br>
-                - Ta hjälp av läraren och klasskamrater så mycket som bara möjligt.
+                    Datan är från 2016 och innehåller inte data från mobilspel utan endast konsoler och pc, detta kan påverka datan i relation till dagens statistik. Datans innehåll sträcker sig från 1980 till 2016 och innehåller spel och sålt minst 100 000 exemplar. 
+                    </p>
+            </div>
+
+            <div class="text_box">
+                <h2>Databearbetningen</h2>
+                <p>Datan bestod av totalt mer än 16500 objekt. Detta var eftersom att spel som släppts på olika plattformar räknades som olika objekt. Vi bestämde oss för att lägga ihop dessa element till ett ihopsatt objekt där vi även la ihop alla totala säljningar för respektive plattform. Vi bestämde oss för att visualisera top 20 spel beroende på genrer och därför förkortade vi datan.</p>
+            </div>
+        
+            <div class="text_box">
+                <h2>Lärdomar och rekommendationer</h2>
+                <p>Vi har lärt oss att genomföra ett större visualiseringsprojekt som innehåller flera olika skalor. Dessutom har vi lärt oss hur man ska placera grupper på olika ställen i samma svg element, att arbeta med legender, att applicera många färger med scaleOrdinal och sist men inte minst att arbeta som ett team <3</p>
+
+                <p>Ett av de jobbigare momenten var att koppla samman linjerna mellan cirkeldiagrammet och stapeldiagrammet. Det svåra var att få linjen att börja vid speltitelns slut och att få linjen att avsluta precis innan cirkeln över. Placeringen av “försäljnings-cirklarna” var också svår då det krävde logik tänkande och det var en utmaning. </p>
+
+                <p>Våra rekommendationer till kommande studenter:</p>
+                <p>- Börja i god tid. <br>
+                    - Gör d3 övningar först, det underlättar för projektet.<br>
+                    - Sikta rimligt, inte för lågt eller för högt.<br>
+                    - Ta hjälp av läraren och klasskamrater så mycket som bara möjligt.
                 </p>
+            </div>
         </div>
+
     </div>
 
+    </div>
+
+    
+    <div>
+
+    </div>
     <!-- <script src="./other/d3-legend.min.js"></script> -->
     <script src="./other/d3.v7.min.js"></script>
     <script src="./other/d3-legend.min.js"></script>

@@ -4,12 +4,14 @@
 
     box-sizing: border-box;
     color: var(--white);
+}
+#svgContent * {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
 
-    margin: 0;
+    margin: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -18,7 +20,11 @@ body {
     background-color: var(--black);
 }
 
-.game_title {
+#headerContent {
+    margin-top: 50px;
+}
+
+#svgContent .game_title {
     font-size: 12px;
     fill: var(--white);
     font-family: 'Courier New', Courier, monospace;
@@ -61,40 +67,40 @@ body {
     font-weight: bolder;
 }
 
-h1 {
-    margin: 100px;
-    text-align: center;
-}
 
 .text_wrapper {
-    display: grid;
+    /* display: grid;
     grid-template-columns: repeat(2, 1fr);
+    gap: 50px; */
+    margin: 0 200px 0 200px;
+    display: flex;
+    flex-direction: column;
     gap: 50px;
+}
+.text_wrapper * {
+    font-family: 'Courier New', Courier, monospace;
 }
 
 .text_box {
-    height: 500px;
-    width: 500px;
-    border: solid 2px black;
-    border-radius: 5px;
-    display: flex;
+    /* height: 500px;
+    width: 500px; */
+    /* border: solid 2px black; */
+    /* border-radius: 5px; */
+    /* display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-}
-
-svg{
-    margin-top: 100px;
+    align-items: center; */
 }
 
 .button_container {
     display: flex;
     flex-direction: column;
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(6, 100px);
     gap: 30px;
     margin-bottom: 100px;
     z-index: 1;
+    justify-content: center;
 }
 
 .filter_button {
@@ -140,4 +146,15 @@ svg{
 }
 .swatch {
     rx: 50%;
+}
+
+#content_holder {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin: 0 100px 50px 100px;
+}
+
+#desc {
+    width: 700px;
 }

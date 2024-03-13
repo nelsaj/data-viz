@@ -1,5 +1,5 @@
 export function create_tooltip () {
-    let tooltip = d3.select("body").append("div")
+    let tooltip = d3.select("#svgContent").append("div")
         .style("opacity", 0)
         .classed("tooltip", true);
 }
