@@ -7,15 +7,24 @@ import { create_line_chart } from "./js/linechart.js";
 import { create_wrapper } from "./js/wrapper_g.js";
 import { create_sales_circles } from "./js/sales_circles.js";
 
+export let genres = [];
+
 ( async function () {
     let dataset = await structure_data();
+
+    dataset.forEach( (object) => {
+        if (!genres.includes(object.Genre)) {
+            genres.push(object.Genre)
+        }
+    })
 
     create_svg();
     create_tooltip();
     create_wrapper();
 
     create_bar_chart(dataset);
-    create_genre_buttons(dataset);
     create_line_chart(dataset);
     create_sales_circles(dataset);
+
+    create_genre_buttons(dataset);
 }) ()

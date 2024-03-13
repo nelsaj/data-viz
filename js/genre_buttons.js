@@ -22,7 +22,7 @@ export function create_genre_buttons (dataset) {
         button_container.append("button")   
             .text(genre)
             .classed("filter_button", true)
-            .style("border", `2px solid ${get_color(genre)}`)
+            .style("border", `2px solid ${get_color(genre, genres)}`)
             .style("color", get_color(genre))
             .on('click', async (event) => {
     
@@ -41,7 +41,7 @@ export function create_genre_buttons (dataset) {
 
                 document.body.style.setProperty('--genre_color', get_color(genre));
 
-                update_bar_chart(dataset, filtered_data);
+                update_bar_chart(dataset, filtered_data), genres;
                 update_sales_circles(filtered_data);
             });
     })

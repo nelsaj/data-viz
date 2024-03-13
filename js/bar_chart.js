@@ -23,36 +23,33 @@ function create_yScale (dataset) {
     return yScale;
 }
 
-export async function create_bar_chart (dataset) {
+export function create_bar_chart (dataset) {
     dataset = dataset.slice(0, variable.number_of_games);
-    console.log(dataset);
     
     let xScale = create_xScale(dataset);
     let yScale = create_yScale(dataset);    
 
-    let wBar = xScale.bandwidth;
+    let wBar = xScale.bandwidth();
 
     let sharedG = d3.select(".wrapper").append("g")
         .classed("bar_G", true)
         
 
-    let gviz_bars = sharedG.append("g")
+    let g_bars = sharedG.append("g")
         .classed("g_bars", true)
-        // .attr("transform", `translate(${variable.wPad}, ${variable.hPad})`);
 
-    gviz_bars.selectAll("rect")
+    g_bars.selectAll("rect")
         .data(dataset)
         .enter()
         .append("rect")  
         .attr("class", "bar") 
         .attr("fill", d => get_color(d.Genre))
         .attr("width", wBar)
-        .attr("x", setX)
-        .attr("y", setY)
-        .attr("height", setH)
-        .attr("stroke-width", 5)
+        .attr("x", d => xScale(d.Name))
+        .attr("y", d => yScale(d.Global_Sales))
+        .attr("height", d => variable.hViz - yScale(d.Global_Sales))
 
-    gviz_bars.selectAll("rect") 
+    g_bars.selectAll("rect") 
         .on("mouseover", tooltip.mouseover)
         .on("mousemove", (event, d) => tooltip.mousemove(event, d, `<p><span>${d.Name}<span></p><p>Global Sales: ${d.Global_Sales.toFixed(2)} million</p><p>Publisher: ${d.Publisher}</p><p>Platforms: ${d.Platforms.join(", ")}</p>`))
         .on("mouseleave", tooltip.mouseleave)
@@ -62,18 +59,16 @@ export async function create_bar_chart (dataset) {
     sharedG
         .attr("transform", `translate(0, ${variable.hViz - highest_bar})`);
 
-    let gviz_text = sharedG.append("g")
+    let g_text = sharedG.append("g")
         .classed("g_text", true);
     
-    gviz_text
-        // .attr("transform", `translate(${variable.wPad}, ${variable.hPad})`)
+    g_text
         .selectAll("rect")
         .data(dataset)
         .enter()
         .append("text")
         .classed("game_title", true)
-        // .attr("transform", d => `translate(${setX_text(d)}, ${setY_text(d)})rotate(-90)`)
-        .text(set_text_content)
+        .text( d => d.Name)
 
     const textElement = document.querySelector(".game_title");
     let style = window.getComputedStyle(textElement);
@@ -82,14 +77,10 @@ export async function create_bar_chart (dataset) {
     fontSize = parseInt(fontSize);
 
     d3.selectAll(".game_title") 
-        .attr("transform", d => `translate(${setX_text(d) + fontSize/4}, ${setY_text(d) - 10})rotate(-90)`)
+        .attr("transform", d => `translate(${setX_text(d)}, ${setY_text(d)})rotate(-90)`)
     
-    function setX (d, i) { return xScale(d.Name); }
-    function setY (d, i) { return yScale(d.Global_Sales); }
-    function setH (d, i) { return variable.hViz - yScale(d.Global_Sales); }
-    function setX_text (d, i) { return xScale(d.Name) + (xScale.bandwidth()/2)} // - lineheight /2
-    function setY_text (d) {return yScale(d.Global_Sales)}
-    function set_text_content (d) {return d.Name}
+    function setX_text (d, i) { return xScale(d.Name) + wBar/2 + fontSize/4}
+    function setY_text (d) {return yScale(d.Global_Sales) - variable.pad/2}
 }
 
 export function update_bar_chart (old_data, new_data) {

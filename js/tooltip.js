@@ -1,4 +1,8 @@
-import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+export function create_tooltip () {
+    let tooltip = d3.select("body").append("div")
+        .style("opacity", 0)
+        .classed("tooltip", true);
+}
 
 export const tooltip = {
     mouseover() {
@@ -17,10 +21,4 @@ export const tooltip = {
             .style("opacity", 0)
             .style("z-index", -1)
     }
-}
-
-export function create_tooltip () {
-    let tooltip = d3.select("body").append("div")
-        .style("opacity", 0)
-        .classed("tooltip", true);
 }

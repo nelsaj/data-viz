@@ -1,4 +1,3 @@
-import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import { get_color } from "./colors.js";
 import * as variable from "./variables.js";
 import { yScale_for_lines } from "./bar_chart.js";
@@ -10,6 +9,7 @@ function create_xScale (dataset) {
     .range([0, variable.wViz])
     return xScale;
 }
+
 function create_yScale (dataset) {
     let yScale = d3.scaleLinear()
     .domain([1975, 2015]) 
@@ -17,25 +17,20 @@ function create_yScale (dataset) {
     return yScale;
 }    
 
-export async function create_line_chart (dataset) {
+export function create_line_chart (dataset) {
     dataset = dataset.slice(0, variable.number_of_games);
-    let nodeList = d3.selectAll(".game_title")["_groups"][0];
 
     const yScale = create_yScale(dataset);
     const xScale = create_xScale(dataset);
 
     let axisFunctionY = d3.axisLeft(create_yScale(dataset)).tickValues([1975, 1985, 1995, 2005, 2015]).tickFormat(d3.format("d"));
 
-    
     let sharedG = d3.select(".wrapper").append("g")
-        .attr("transform", `translate(0, 0)`)
-    // .attr("fill", "red");
     
-    sharedG // y
+    sharedG
         .append("g")
         .classed("yAxis", true)    
         .call(axisFunctionY)
-        // .attr("transform", `translate(${variable.wPad}, ${variable.hPad})`);
 
     sharedG.append("g")
         .classed("g_dots", true)
@@ -46,13 +41,15 @@ export async function create_line_chart (dataset) {
         .classed("dot", true)
         .attr("fill", d => get_color(d.Genre))
         .attr("r", 5)
-        .attr("cy", (d, i) => yScale(d.Year)) 
-        .attr("cx", (d, i) => xScale(d.Name) + (d3.select(".bar").attr("width") * 1.1) / 2);
+        .attr("cy", (d, i) => yScale(d.Year))
+        .attr("cx", (d, i) => xScale(d.Name) + (d3.select(".bar").attr("width") * 1.1 / 2));
     
     d3.select(".g_dots").selectAll("circle") 
         .on("mouseover", tooltip.mouseover)
-        .on("mousemove", (event, d) => tooltip.mousemove(event, d, `<p>Title: ${d.Name}</p><p>Released: ${d.Year}</p>`))
+        .on("mousemove", (event, d) => tooltip.mousemove(event, d, `<p><span>${d.Name}</span></p><p>Released: ${d.Year}</p>`))
         .on("mouseleave", tooltip.mouseleave)
+
+    let nodeList = d3.selectAll(".game_title")["_groups"][0];
 
     sharedG.append("g")
         .classed("g_lines", true)
