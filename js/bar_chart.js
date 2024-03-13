@@ -83,28 +83,22 @@ export function create_bar_chart (dataset) {
     function setY_text (d) {return yScale(d.Global_Sales) - variable.pad/2}
 }
 
-export function update_bar_chart (old_data, new_data) {
-    let xScale = create_xScale(new_data);
-    let yScale = create_yScale(old_data);
+export function update_bar_chart (dataset, filtered_data) {
+    let xScale = create_xScale(filtered_data);
+    let yScale = create_yScale(dataset);
 
-    console.log(new_data);
     d3.select(".g_bars").selectAll(".bar")
-        .data(new_data)
+        .data(filtered_data)
         .transition()
         .duration(variable.timer)
         .attr("fill", d => get_color(d.Genre))
-        .attr("height", setH)
-        .attr("y", setY)
+        .attr("height", d => variable.hViz - yScale(d.Global_Sales))
+        .attr("y", d => yScale(d.Global_Sales))
 
     d3.select(".g_bars").selectAll(".bar")
         .on("mouseover", tooltip.mouseover)
-        .on("mousemove", (event, d) => tooltip.mousemove(event, d, `<p>Title: ${d.Name}</p><p>Global Sales: ${d.Global_Sales.toFixed(2)} million</p><p>Platforms: ${d.Platforms.join(", ")}</p>`))
+        .on("mousemove", (event, d) => tooltip.mousemove(event, d, `<p><span>${d.Name}</span></p><p>Global Sales: ${d.Global_Sales.toFixed(2)} million</p><p>Platforms: ${d.Platforms.join(", ")}</p>`))
         .on("mouseleave", tooltip.mouseleave)
-    
-
-    // const sharedG = d3.select(".bar_G");
-    // sharedG
-    //     .attr("transform", `translate(${variable.wPad}, ${variable.hSvg - sharedG.select(".bar").attr("height")})`);
 
     const textElement = document.querySelector(".game_title");
     let style = window.getComputedStyle(textElement);
@@ -113,36 +107,32 @@ export function update_bar_chart (old_data, new_data) {
     fontSize = parseInt(fontSize);
 
     d3.select(".g_text").selectAll("text")
-        .data(new_data)
+        .data(filtered_data)
         .transition()
         .duration(variable.timer)
         .text(set_text_content)
-        .attr("transform", d => `translate(${setX_text(d) + fontSize/3}, ${setY_text(d) - 10})rotate(-90)`)
+        .attr("transform", d => `translate(${setX_text(d)}, ${setY_text(d)})rotate(-90)`)
     
     setTimeout( () => {
         let nodeList = d3.selectAll(".game_title")["_groups"][0];
-        update_line_chart(old_data, new_data, nodeList)
+        update_line_chart(dataset, filtered_data, nodeList)
     , 100})
 
-    function setX (d, i) { return xScale(d.Name); }
-    function setY (d, i) { return yScale(d.Global_Sales); }
-    function setH (d, i) { return variable.hViz - yScale(d.Global_Sales); }
-    function setX_text (d, i) { return xScale(d.Name) + (xScale.bandwidth()/2)} // - lineheight /2
-    function setY_text (d) {return yScale(d.Global_Sales)}
+    function setX_text (d, i) { return xScale(d.Name) + (xScale.bandwidth()/2) + fontSize/3} // - lineheight /2
+    function setY_text (d) {return yScale(d.Global_Sales) - variable.pad/2}
     function set_text_content (d) {return d.Name}
-    
 }
 
-export function yScale_for_lines (dataset, d, nodeList) {
-    let text_length;
+export function get_y2_line (dataset, d, nodeList) {
+    let text_width;
     for (let i = 0; i < nodeList.length; i++) {
         if (nodeList[i].__data__.Name == d.Name) {
-            text_length = nodeList[i].getComputedTextLength();
+            text_width = nodeList[i].getComputedTextLength();
             break;
         };
     }
 
     let yScale = create_yScale(dataset);
-    let value = yScale(d.Global_Sales) + variable.hViz - highest_bar - text_length - variable.pad; //  transform Y: bar_G(-167.5) + g(125) = 292.5
+    let value = yScale(d.Global_Sales) + variable.hViz - highest_bar - text_width - variable.pad;
     return value; 
 }

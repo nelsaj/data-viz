@@ -1,35 +1,28 @@
-import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import { update_bar_chart } from "./bar_chart.js";
 import { filter_by_genre } from "./filtering.js";
 import { get_color } from "./colors.js";
 import { update_line_chart } from "./linechart.js";
 import { update_sales_circles } from "./sales_circles.js";
+import { genres } from "../index.js";
 
 export function create_genre_buttons (dataset) {
     let button_container = d3.select("body")
         .append("div")
 
     button_container.classed("button_container", true)
-    let genres = [];
-
-    dataset.forEach( object => {
-        if(!genres.includes(object.Genre)) {
-            genres.push(object.Genre);
-        }
-    })
 
     genres.forEach( genre => {
         button_container.append("button")   
             .text(genre)
             .classed("filter_button", true)
-            .style("border", `2px solid ${get_color(genre, genres)}`)
+            .style("border", `2px solid ${get_color(genre)}`)
             .style("color", get_color(genre))
-            .on('click', async (event) => {
+            .on('click', (event) => {
     
                 if(event.target.classList.contains("active")) {
-                    let filtered_data = filter_by_genre(dataset, undefined);
-                    console.log("fel")
+                    let filtered_data = filter_by_genre(dataset);
                     event.target.classList.remove("active");
+
                     update_bar_chart(dataset, filtered_data);
                     update_sales_circles(filtered_data);
                     return;
@@ -41,7 +34,7 @@ export function create_genre_buttons (dataset) {
 
                 document.body.style.setProperty('--genre_color', get_color(genre));
 
-                update_bar_chart(dataset, filtered_data), genres;
+                update_bar_chart(dataset, filtered_data);
                 update_sales_circles(filtered_data);
             });
     })

@@ -50,7 +50,5 @@ export function filter_by_genre(dataset, genre) {
 
     dataset = dataset.slice(0, variable.number_of_games);
 
-    console.log(dataset);
-
     return dataset;
 }
