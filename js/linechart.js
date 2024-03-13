@@ -91,7 +91,7 @@ export function update_line_chart (old_data, new_data, nodeList) {
 
     d3.select(".g_dots").selectAll("circle") 
         .on("mouseover", tooltip.mouseover)
-        .on("mousemove", (event, d) => tooltip.mousemove(event, d, `<p>Title: ${d.Name}</p><p>Released: ${d.Year}</p>`))
+        .on("mousemove", (event, d) => tooltip.mousemove(event, d, `<p><span>${d.Name}</span></p><p>Released: ${d.Year}</p>`))
         .on("mouseleave", tooltip.mouseleave)
 
     d3.select(".g_lines").selectAll("line")
