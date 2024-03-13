@@ -73,11 +73,16 @@ export async function create_sales_circles (dataset) {
 }
 
 let pastY = null;
-function create_circle (parent, sale_type, color, index, past) {
+function create_circle (parent, sale_type, color, index, past, update = null) {
     let pastPastY = null;
 
-    let circle = parent
-        .append("circle")
+    let circle;
+
+    if(update) {
+        circle = parent.select(`circle:nth-child(${index + 1})`);
+    } else {
+        circle = parent
+            .append("circle")}
     
     circle
         .on("mouseover", tooltip.mouseover)
@@ -88,10 +93,12 @@ function create_circle (parent, sale_type, color, index, past) {
         .transition()
         .duration(variable.timer)
         .attr("r", d => testScale(d.Global_Sales)(d[`${sale_type}_Sales`]))
-
-    circle
+        
+        circle
         .attr("fill", color)
         .attr("cy", d => { 
+            if(update) console.log(sale_type);
+
             let radie = testScale(d.Global_Sales)(d[`${sale_type}_Sales`]);
             let pastR = testScale(d.Global_Sales)(d[`${past}_Sales`]);
             if(index === 0) {pastY = radie; pastR = radie; return radie}
@@ -106,8 +113,18 @@ function create_circle (parent, sale_type, color, index, past) {
         .attr("id", d => d.Name.replaceAll(" ", "").replaceAll("/", "").replaceAll(":", "") + "_" + sale_type)
 }
 
+// function update_circles (parent, sale_type, color) {
+//     let pastPastY = null;
 
-function init_circles (parent) {
+//     console.log(parent.selectAll("circle"));
+
+//     parent.selectAll("circle")
+//         .attr("r", d => testScale(d.Global_Sales)(d[`${sale_type}_Sales`]))
+//         .attr("fill", color)
+// }
+
+
+function init_circles (parent, update = null) {
     let sale_types = ["NA", "EU", "JP", "Other"];
     let sale_types_obj = [];
     let color_scale = create_colorScale();
@@ -121,14 +138,17 @@ function init_circles (parent) {
     sale_types_obj.forEach((type, i) => {
         let past = 0;
         if(i !== 0) past = sale_types_obj[i - 1][0];
-        create_circle(parent, type[0], color_scale(type[0]), i, past);
+
+        if(update) create_circle(parent, type[0], color_scale(type[0]), i, past, true);
+        else create_circle(parent, type[0], color_scale(type[0]), i, past);
     })
 }
 
 export function update_sales_circles (new_data) {
-    d3.selectAll(".test").html("");
+    console.log(new_data);
+    // d3.selectAll(".test").html("");
     for (let i = 0; i < new_data.length; i++) { 
         let test = d3.select(`.test:nth-child(${i + 1})`).selectAll('rect').data([new_data[i]]).enter();
-        init_circles(test);
+        init_circles(test, true);
     }
 }
