@@ -1,17 +1,9 @@
-import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import * as variable from "./variables.js";
 
-
-
-export async function create_svg() {
+export function create_svg() {
 
     let svg = d3.select("body").append("svg")
-        .attr("width", variable.wSvg).attr("height", variable.hSvg);
-    
-    let tooltip = d3.select("body").append("div")
-    .style("opacity", 0)
-    .classed("tooltip", true);
-    
+        .attr("width", variable.wSvg).attr("height", variable.hSvg);    
 }
 
 

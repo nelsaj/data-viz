@@ -1,4 +1,3 @@
-import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import * as variable from "./variables.js";
 import { get_color } from "./colors.js";
 import { update_line_chart } from "./linechart.js";
@@ -61,7 +60,7 @@ export async function create_bar_chart (dataset) {
     highest_bar = d3.select(".bar_G").select(".bar").attr("height");
 
     sharedG
-        .attr("transform", `translate(0, ${variable.hViz - sharedG.select(".bar").attr("height")})`);
+        .attr("transform", `translate(0, ${variable.hViz - highest_bar})`);
 
     let gviz_text = sharedG.append("g")
         .classed("g_text", true);
